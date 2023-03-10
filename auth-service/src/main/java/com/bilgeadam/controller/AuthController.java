@@ -6,15 +6,20 @@ import com.bilgeadam.dto.request.RegisterRequestDto;
 import com.bilgeadam.dto.request.UpdateByEmailOrUserNameRequestDto;
 import com.bilgeadam.dto.response.LoginResponseDto;
 import com.bilgeadam.dto.response.RegisterResponseDto;
+import com.bilgeadam.dto.response.RoleResponseDto;
 import com.bilgeadam.repository.entity.Auth;
 import com.bilgeadam.service.AuthService;
 import com.bilgeadam.utility.JwtTokenManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static com.bilgeadam.constant.ApiUrls.*;
 
@@ -25,6 +30,8 @@ public class AuthController {
     private final AuthService authService;
 
     private final JwtTokenManager jwtTokenManager;
+
+    private final CacheManager cacheManager;
 
 
     @PostMapping(REGISTER)
@@ -79,8 +86,31 @@ public class AuthController {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    @GetMapping("/redisdelete")
+    @CacheEvict(cacheNames = "redisexample" ,allEntries = true )
+    public void redisDeleteExample(){
 
     }
+    @GetMapping("/redisdelete2")
+    public Boolean redisDeleteExample2(){
+        try {
+          //  cacheManager.getCache("redisexample").clear();// aynı isimli cahcde butun değerleri siler;
+            cacheManager.getCache("redisexample").evict("Mustafa");
+            return  true;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return  false;
+        }
+
+    }
+
+
+    @GetMapping("findbyrole/{role}")
+    public  ResponseEntity<List<RoleResponseDto>> findbyRole(@PathVariable String role){
+        return ResponseEntity.ok(authService.findByRole(role));
+    }
+
 
 }

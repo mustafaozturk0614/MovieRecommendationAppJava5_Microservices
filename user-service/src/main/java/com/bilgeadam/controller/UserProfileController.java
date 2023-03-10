@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /*
     update metodu yazalım
@@ -52,4 +53,15 @@ public class UserProfileController {
         return  ResponseEntity.ok(userProfileService.findAll());
     }
 
+
+    @GetMapping(FINDBYUSERNAME)///findbyusername/{username}"
+    public  ResponseEntity<UserProfile> findbyUsername(@PathVariable String username){
+
+        return  ResponseEntity.ok(userProfileService.findByUserName(username));
+    }
+
+    @GetMapping("/findbyrole/{role}")
+    public ResponseEntity<List<UserProfile>> findByRole(@PathVariable  String role){
+        return ResponseEntity.ok(userProfileService.findByRole(role));
+    }
 }

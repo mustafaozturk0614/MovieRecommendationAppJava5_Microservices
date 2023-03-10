@@ -16,9 +16,9 @@ public enum ErrorType {
 
     LOGIN_ERROR(4114,"Kullanici adi veya sifre hatali",HttpStatus.BAD_REQUEST),
     LOGIN_ERROR_STATUS(4115,"Yetkisiz kullanıcı girişi  ",HttpStatus.BAD_REQUEST),
-   TOKEN_NOT_CREATED(4116,"Token oluşturulamadı",HttpStatus.BAD_REQUEST)
+   TOKEN_NOT_CREATED(4116,"Token oluşturulamadı",HttpStatus.BAD_REQUEST),
 
-
+    ROLE_NOT_FOUND(4117,"Boyle bir kullanici rolu bulunamadı",HttpStatus.BAD_REQUEST),
 
 
     ;

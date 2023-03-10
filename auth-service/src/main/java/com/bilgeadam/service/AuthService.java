@@ -5,6 +5,7 @@ import com.bilgeadam.dto.request.LoginRequestDto;
 import com.bilgeadam.dto.request.RegisterRequestDto;
 import com.bilgeadam.dto.request.UpdateByEmailOrUserNameRequestDto;
 import com.bilgeadam.dto.response.RegisterResponseDto;
+import com.bilgeadam.dto.response.RoleResponseDto;
 import com.bilgeadam.exception.AuthManagerException;
 import com.bilgeadam.exception.ErrorType;
 import com.bilgeadam.manager.IUserManager;
@@ -14,14 +15,19 @@ import com.bilgeadam.rabbitmq.producer.EmailProducer;
 import com.bilgeadam.rabbitmq.producer.RegisterUserProducer;
 import com.bilgeadam.repository.IAuthRepository;
 import com.bilgeadam.repository.entity.Auth;
+import com.bilgeadam.repository.enums.ERole;
 import com.bilgeadam.repository.enums.EStatus;
 import com.bilgeadam.utility.CodeGenerator;
 import com.bilgeadam.utility.JwtTokenManager;
 import com.bilgeadam.utility.ServiceManager;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.Role;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService extends ServiceManager<Auth,Long> {
@@ -122,5 +128,17 @@ public class AuthService extends ServiceManager<Auth,Long> {
         auth.get().setUsername(dto.getUsername());
         update(auth.get());
         return true;
+    }
+
+    public List<RoleResponseDto> findByRole(String role) {
+        ERole myrole;
+        try {
+            myrole =ERole.valueOf(role.toUpperCase());
+        }catch (Exception e){
+            throw  new AuthManagerException(ErrorType.ROLE_NOT_FOUND);
+        }
+
+        // authRepository.findAllByRole(myrole).stream().map(x->IAuthMapper.INSTANCE.toRoleResponseDto(x)).collect(Collectors.toList());
+        return  IAuthMapper.INSTANCE.toRoleResponseDtos(authRepository.findAllByRole(myrole));
     }
 }

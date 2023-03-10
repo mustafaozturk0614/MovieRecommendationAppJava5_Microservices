@@ -5,6 +5,7 @@ import com.bilgeadam.dto.request.RegisterRequestDto;
 import com.bilgeadam.dto.request.UpdateByEmailOrUserNameRequestDto;
 import com.bilgeadam.dto.response.LoginResponseDto;
 import com.bilgeadam.dto.response.RegisterResponseDto;
+import com.bilgeadam.dto.response.RoleResponseDto;
 import com.bilgeadam.rabbitmq.model.NewCreateUserRequestModel;
 import com.bilgeadam.repository.entity.Auth;
 import org.mapstruct.Mapper;
@@ -12,6 +13,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IAuthMapper {
@@ -31,5 +34,8 @@ public interface IAuthMapper {
 
     @Mapping(source = "id",target = "authId")
     NewCreateUserRequestModel toNewCreateUserRequestModel(final Auth auth);
+
+    RoleResponseDto toRoleResponseDto(final Auth auth);
+    List<RoleResponseDto> toRoleResponseDtos(final List<Auth> authList);
 
 }

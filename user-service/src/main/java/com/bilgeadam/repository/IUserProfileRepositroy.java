@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface IUserProfileRepositroy extends JpaRepository<UserProfile,Long> {
 
     Optional<UserProfile> findOptionalByAuthId(Long id);
+
+    Optional<UserProfile> findOptionalByUsernameEqualsIgnoreCase(String username);
 }
