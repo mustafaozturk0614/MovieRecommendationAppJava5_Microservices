@@ -15,6 +15,7 @@
         <module name="MovieRecommendationAppJava5.api-gateway-service.main" />
         <module name="MovieRecommendationAppJava5.user-service.main" />
         <module name="MovieRecommendationAppJava5.config-server-git.main" />
+        <module name="MovieRecommendationAppJava5.elastic-service.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />

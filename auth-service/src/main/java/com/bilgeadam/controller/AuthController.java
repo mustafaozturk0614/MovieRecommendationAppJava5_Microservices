@@ -80,7 +80,7 @@ public class AuthController {
     @Cacheable(value = "redisexample")
     public  String redisExample(String value){
         try {//
-            Thread.sleep(2000);
+            Thread.sleep(4000);
 
             return  value;
         } catch (InterruptedException e) {

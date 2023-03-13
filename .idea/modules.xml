@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/auth-service/MovieRecommendationAppJava5.auth-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auth-service/MovieRecommendationAppJava5.auth-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/config-server-git/MovieRecommendationAppJava5.config-server-git.main.iml" filepath="$PROJECT_DIR$/.idea/modules/config-server-git/MovieRecommendationAppJava5.config-server-git.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/config-server/MovieRecommendationAppJava5.config-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/config-server/MovieRecommendationAppJava5.config-server.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/elastic-service/MovieRecommendationAppJava5.elastic-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/elastic-service/MovieRecommendationAppJava5.elastic-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mail-service/MovieRecommendationAppJava5.mail-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mail-service/MovieRecommendationAppJava5.mail-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service/MovieRecommendationAppJava5.user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service/MovieRecommendationAppJava5.user-service.main.iml" />
     </modules>

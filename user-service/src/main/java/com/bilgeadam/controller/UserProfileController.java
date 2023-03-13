@@ -4,6 +4,7 @@ import static com.bilgeadam.constant.ApiUrls.*;
 
 import com.bilgeadam.dto.request.NewCreateUserRequestDto;
 import com.bilgeadam.dto.request.UpdateRequestDto;
+import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.repository.entity.UserProfile;
 import com.bilgeadam.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +50,8 @@ public class UserProfileController {
     }
 
     @GetMapping(FINDALL)
-    public  ResponseEntity<List< UserProfile>> findAll(){
-        return  ResponseEntity.ok(userProfileService.findAll());
+    public  ResponseEntity<List<UserFindAllResponseDto>> findAll(){
+        return  ResponseEntity.ok(userProfileService.findAllUser());
     }
 
 

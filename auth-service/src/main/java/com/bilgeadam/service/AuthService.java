@@ -20,14 +20,12 @@ import com.bilgeadam.repository.enums.EStatus;
 import com.bilgeadam.utility.CodeGenerator;
 import com.bilgeadam.utility.JwtTokenManager;
 import com.bilgeadam.utility.ServiceManager;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Role;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthService extends ServiceManager<Auth,Long> {
@@ -37,13 +35,16 @@ public class AuthService extends ServiceManager<Auth,Long> {
 
     private final RegisterUserProducer userProducer;
 
+    private final CacheManager cacheManager;
+
     private final EmailProducer emailProducer;
-    public AuthService(IAuthRepository authRepository, IUserManager userManager, JwtTokenManager jwtTokenManager, RegisterUserProducer userProducer, EmailProducer emailProducer) {
+    public AuthService(IAuthRepository authRepository, IUserManager userManager, JwtTokenManager jwtTokenManager, RegisterUserProducer userProducer, CacheManager cacheManager, EmailProducer emailProducer) {
         super(authRepository);
         this.authRepository = authRepository;
         this.userManager = userManager;
         this.jwtTokenManager = jwtTokenManager;
         this.userProducer = userProducer;
+        this.cacheManager = cacheManager;
         this.emailProducer = emailProducer;
     }
 
@@ -68,6 +69,7 @@ public class AuthService extends ServiceManager<Auth,Long> {
             //rabbit mq ile haberleşme sağlayacağım
             userProducer.sendNewUser(IAuthMapper.INSTANCE.toNewCreateUserRequestModel(auth));
             emailProducer.sendActivationCode(EmailModel.builder().email(auth.getEmail()).activationCode(auth.getActivationCode()).build());
+            cacheManager.getCache("myrole").evict(auth.getRole().toString().toLowerCase());
             return IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
         }catch (Exception e){
             throw new AuthManagerException(ErrorType.USER_NOT_CREATED);

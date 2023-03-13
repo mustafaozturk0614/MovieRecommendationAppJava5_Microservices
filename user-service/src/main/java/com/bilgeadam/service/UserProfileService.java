@@ -3,6 +3,7 @@ package com.bilgeadam.service;
 import com.bilgeadam.dto.request.NewCreateUserRequestDto;
 import com.bilgeadam.dto.request.UpdateRequestDto;
 import com.bilgeadam.dto.response.RoleResponseDto;
+import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.exception.ErrorType;
 import com.bilgeadam.exception.UserManagerException;
 import com.bilgeadam.manager.AuthManager;
@@ -11,8 +12,8 @@ import com.bilgeadam.repository.IUserProfileRepositroy;
 import com.bilgeadam.repository.entity.UserProfile;
 import com.bilgeadam.repository.enums.EStatus;
 import com.bilgeadam.utility.ServiceManager;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,16 +28,20 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
 
     private final AuthManager authManager;
 
-    public UserProfileService(IUserProfileRepositroy userProfileRepositroy, AuthManager authManager) {
+    private final CacheManager cacheManager;
+
+    public UserProfileService(IUserProfileRepositroy userProfileRepositroy, AuthManager authManager, CacheManager cacheManager) {
         super(userProfileRepositroy);
         this.userProfileRepositroy = userProfileRepositroy;
         this.authManager = authManager;
+        this.cacheManager = cacheManager;
     }
 
     public Boolean createUser(NewCreateUserRequestDto dto) {
         try {
             UserProfile userProfile= IUserMapper.INSTANCE.toUserProfile(dto);
             save(userProfile);
+  //          cacheManager.getCache("myrole").clear();
             return  true;
         }catch (Exception e){
             throw  new UserManagerException(ErrorType.USER_NOT_CREATED);
@@ -46,11 +51,10 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
 
     public Boolean update(UpdateRequestDto dto) {
         Optional<UserProfile> userProfile=userProfileRepositroy.findOptionalByAuthId(dto.getAuthId());
-
         if (userProfile.isEmpty()){
             throw new UserManagerException(ErrorType.USER_NOT_FOUND);
         }
-
+        cacheManager.getCache("myusername").evict(userProfile.get().getUsername().toLowerCase());
         if (!dto.getEmail().equals(userProfile.get().getEmail())||!dto.getUsername().equals(userProfile.get().getUsername())){
             userProfile.get().setUsername(dto.getUsername());
            userProfile.get().setEmail(dto.getEmail());
@@ -92,9 +96,7 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
     @Cacheable(value = "myrole",key = "#role.toLowerCase()")
     public List<UserProfile> findByRole(String role) {
   List<RoleResponseDto> list=authManager.findbyRole(role).getBody();
-
    List <Optional<UserProfile>> users=list.stream().map(x-> userProfileRepositroy.findOptionalByAuthId(x.getId())).collect(Collectors.toList());
-
      return   users.stream().map(y->{
           if (y.isPresent()){
             return   y.get();
@@ -102,5 +104,10 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
               return  null;
           }
       }  ).collect(Collectors.toList());
+    }
+
+    public List<UserFindAllResponseDto> findAllUser() {
+       return findAll().stream().map(x->IUserMapper.INSTANCE.toUserFindAllResponseDto(x)).collect(Collectors.toList());
+
     }
 }
