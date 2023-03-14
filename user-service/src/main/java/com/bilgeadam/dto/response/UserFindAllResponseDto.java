@@ -8,13 +8,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class UserFindAllResponseDto {
+@SuperBuilder
+public class UserFindAllResponseDto extends BaseEntity {
 
     private Long userId;
     private Long authId;

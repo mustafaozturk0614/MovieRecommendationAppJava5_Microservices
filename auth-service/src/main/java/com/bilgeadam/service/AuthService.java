@@ -55,6 +55,7 @@ public class AuthService extends ServiceManager<Auth,Long> {
            auth.setActivationCode(CodeGenerator.generateCode());
            save(auth);
            userManager.createUser(IAuthMapper.INSTANCE.toNewCreateUserRequestDto(auth));
+           emailProducer.sendActivationCode(EmailModel.builder().email(auth.getEmail()).activationCode(auth.getActivationCode()).build());
            return IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
        }catch (Exception e){
            throw new AuthManagerException(ErrorType.USER_NOT_CREATED);

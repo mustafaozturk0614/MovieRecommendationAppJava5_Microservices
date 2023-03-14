@@ -22,10 +22,8 @@ public class GetAllData {
 
 //    @PostConstruct
 //    public void initData(){
-////        List<UserProfile> userProfileList= userManager.findAll().getBody().stream().map(x->IUserMapper.INSTANCE.toUserProfile(x)).collect(Collectors.toList());
-////        userProfileService.saveAll(userProfileList);
-//   userManager.findAll().getBody().forEach(System.out::println);
-//
+//        List<UserProfile> userProfileList= IUserMapper.INSTANCE.toUserProfiles(userManager.findAll().getBody());
+//         userProfileService.saveAll(userProfileList);
 //    }
 
 }

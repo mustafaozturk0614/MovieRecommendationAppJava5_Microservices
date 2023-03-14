@@ -3,6 +3,7 @@ package com.bilgeadam.mapper;
 import com.bilgeadam.dto.request.NewCreateUserRequestDto;
 import com.bilgeadam.dto.request.UpdateByEmailOrUserNameRequestDto;
 import com.bilgeadam.dto.request.UpdateRequestDto;
+import com.bilgeadam.dto.request.UserProfileCreateRequestDto;
 import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.rabbitmq.model.NewCreateUserRequestModel;
 import com.bilgeadam.repository.entity.UserProfile;
@@ -28,4 +29,7 @@ public interface IUserMapper {
 
     @Mapping(source = "id",target = "userId")
     UserFindAllResponseDto toUserFindAllResponseDto(final UserProfile userProfile);
+
+
+    UserProfileCreateRequestDto toUserProfileCreateRequestDto(final  UserProfile userProfile);
 }

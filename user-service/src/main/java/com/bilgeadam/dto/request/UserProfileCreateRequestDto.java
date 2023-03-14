@@ -1,22 +1,17 @@
-package com.bilgeadam.dto.response;
+package com.bilgeadam.dto.request;
 
-import com.bilgeadam.repository.entity.BaseEntity;
-import com.bilgeadam.repository.enums.EStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
-import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-public class UserFindAllResponseDto extends BaseEntity{
+@Builder
+public class UserProfileCreateRequestDto {
 
-    private Long userId;
+    private Long id;
     private Long authId;
     private String username;
     private String email;
@@ -24,7 +19,6 @@ public class UserFindAllResponseDto extends BaseEntity{
     private String avatar;
     private String address;
     private String about;
-    private EStatus status;
 
 
 

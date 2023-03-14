@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-@FeignClient(name = "user-service-elastic-userprofile" ,url = "http://localhost:8091/v1/api/user",decode404 = true)
+@FeignClient(name = "user-service-elastic-userprofile" ,url = "http://localhost:8091/api/v1/user",decode404 = true)
 public interface IUserManager {
     @GetMapping("/findall")
-    public ResponseEntity<List<UserFindAllResponseDto>> findAll();
+    public  ResponseEntity<List<UserFindAllResponseDto>> findAll();
 }

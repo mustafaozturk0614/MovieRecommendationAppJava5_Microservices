@@ -2,11 +2,13 @@ package com.bilgeadam.service;
 
 import com.bilgeadam.dto.request.NewCreateUserRequestDto;
 import com.bilgeadam.dto.request.UpdateRequestDto;
+import com.bilgeadam.dto.request.UserProfileCreateRequestDto;
 import com.bilgeadam.dto.response.RoleResponseDto;
 import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.exception.ErrorType;
 import com.bilgeadam.exception.UserManagerException;
 import com.bilgeadam.manager.AuthManager;
+import com.bilgeadam.manager.ElasticManager;
 import com.bilgeadam.mapper.IUserMapper;
 import com.bilgeadam.repository.IUserProfileRepositroy;
 import com.bilgeadam.repository.entity.UserProfile;
@@ -16,6 +18,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,23 +30,28 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
     private final IUserProfileRepositroy userProfileRepositroy;
 
     private final AuthManager authManager;
-
+    private final ElasticManager elasticManager;
     private final CacheManager cacheManager;
 
-    public UserProfileService(IUserProfileRepositroy userProfileRepositroy, AuthManager authManager, CacheManager cacheManager) {
+    public UserProfileService(IUserProfileRepositroy userProfileRepositroy, AuthManager authManager, ElasticManager elasticManager, CacheManager cacheManager) {
         super(userProfileRepositroy);
         this.userProfileRepositroy = userProfileRepositroy;
         this.authManager = authManager;
+        this.elasticManager = elasticManager;
         this.cacheManager = cacheManager;
     }
-
+    @Transactional
     public Boolean createUser(NewCreateUserRequestDto dto) {
         try {
             UserProfile userProfile= IUserMapper.INSTANCE.toUserProfile(dto);
             save(userProfile);
   //          cacheManager.getCache("myrole").clear();
+            UserProfileCreateRequestDto dto1=IUserMapper.INSTANCE.toUserProfileCreateRequestDto(userProfile);
+            System.out.println(dto1);
+            elasticManager.create(dto1);
             return  true;
         }catch (Exception e){
+            e.printStackTrace();
             throw  new UserManagerException(ErrorType.USER_NOT_CREATED);
         }
 
