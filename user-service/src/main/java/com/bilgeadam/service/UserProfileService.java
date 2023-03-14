@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -101,8 +102,9 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
         }
     }
 
-    @Cacheable(value = "myrole",key = "#role.toLowerCase()")
+    @Cacheable(value = "myrole",key = "#role.toLowerCase(Locale.ENGLISH)")
     public List<UserProfile> findByRole(String role) {
+        ;
   List<RoleResponseDto> list=authManager.findbyRole(role).getBody();
    List <Optional<UserProfile>> users=list.stream().map(x-> userProfileRepositroy.findOptionalByAuthId(x.getId())).collect(Collectors.toList());
      return   users.stream().map(y->{
