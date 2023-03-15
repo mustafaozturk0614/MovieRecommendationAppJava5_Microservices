@@ -6,7 +6,6 @@ import com.bilgeadam.repository.IUserProfileRepositroy;
 import com.bilgeadam.repository.entity.UserProfile;
 import com.bilgeadam.utility.ServiceManager;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserProfileService extends ServiceManager<UserProfile,String> {
@@ -21,8 +20,6 @@ public class UserProfileService extends ServiceManager<UserProfile,String> {
 
         try {
             UserProfile userProfile=IUserMapper.INSTANCE.toUserProfile(dto);
-            userProfile.setUserId(dto.getId());
-            userProfile.setId(null);
             save(userProfile);
             System.out.println(userProfile);
             return userProfile;

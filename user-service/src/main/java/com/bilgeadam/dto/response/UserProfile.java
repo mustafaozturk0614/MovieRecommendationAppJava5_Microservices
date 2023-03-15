@@ -1,4 +1,4 @@
-package com.bilgeadam.dto.request;
+package com.bilgeadam.dto.response;
 
 import com.bilgeadam.repository.entity.BaseEntity;
 import com.bilgeadam.repository.enums.EStatus;
@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class UserProfileCreateRequestDto extends BaseEntity {
+public class UserProfile extends BaseEntity {
 
+    private  String id;
     private Long userId;
     private Long authId;
     private String username;
@@ -23,7 +25,6 @@ public class UserProfileCreateRequestDto extends BaseEntity {
     private String avatar;
     private String address;
     private String about;
-
-
+    private EStatus status;
 
 }

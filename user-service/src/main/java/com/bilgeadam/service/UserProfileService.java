@@ -43,13 +43,12 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
     }
     @Transactional
     public Boolean createUser(NewCreateUserRequestDto dto) {
+        UserProfile userProfile= IUserMapper.INSTANCE.toUserProfile(dto);
         try {
-            UserProfile userProfile= IUserMapper.INSTANCE.toUserProfile(dto);
+
             save(userProfile);
   //          cacheManager.getCache("myrole").clear();
-            UserProfileCreateRequestDto dto1=IUserMapper.INSTANCE.toUserProfileCreateRequestDto(userProfile);
-            System.out.println(dto1);
-            elasticManager.create(dto1);
+            elasticManager.create(IUserMapper.INSTANCE.toUserProfileCreateRequestDto(userProfile));
             return  true;
         }catch (Exception e){
             e.printStackTrace();

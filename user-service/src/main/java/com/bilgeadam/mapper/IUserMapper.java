@@ -30,6 +30,6 @@ public interface IUserMapper {
     @Mapping(source = "id",target = "userId")
     UserFindAllResponseDto toUserFindAllResponseDto(final UserProfile userProfile);
 
-
+    @Mapping(source = "id",target = "userId")
     UserProfileCreateRequestDto toUserProfileCreateRequestDto(final  UserProfile userProfile);
 }

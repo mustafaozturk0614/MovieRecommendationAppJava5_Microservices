@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(USER)
@@ -30,7 +28,6 @@ public class UserProfileController {
 
     @PostMapping("/create")
     public ResponseEntity<UserProfile> create(@RequestBody UserProfileCreateRequestDto dto){
-        System.out.println(dto);
-        return  ResponseEntity.ok(userProfileService.create(dto));
+        return ResponseEntity.ok(userProfileService.create(dto));
     }
 }

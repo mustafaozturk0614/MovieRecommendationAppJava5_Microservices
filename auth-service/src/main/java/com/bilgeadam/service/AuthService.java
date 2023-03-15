@@ -1,9 +1,6 @@
 package com.bilgeadam.service;
 
-import com.bilgeadam.dto.request.ActivateRequestDto;
-import com.bilgeadam.dto.request.LoginRequestDto;
-import com.bilgeadam.dto.request.RegisterRequestDto;
-import com.bilgeadam.dto.request.UpdateByEmailOrUserNameRequestDto;
+import com.bilgeadam.dto.request.*;
 import com.bilgeadam.dto.response.RegisterResponseDto;
 import com.bilgeadam.dto.response.RoleResponseDto;
 import com.bilgeadam.exception.AuthManagerException;
@@ -77,7 +74,7 @@ public class AuthService extends ServiceManager<Auth,Long> {
         }
     }
 
-    public Boolean activateStatus(ActivateRequestDto dto) {
+    public Boolean activateStatus(String token,ActivateRequestDto dto) {
         Optional<Auth> auth=findById(dto.getId());
         if (auth.isEmpty()){
             throw  new AuthManagerException(ErrorType.USER_NOT_FOUND);
@@ -85,7 +82,7 @@ public class AuthService extends ServiceManager<Auth,Long> {
         if (dto.getActivationCode().equals(auth.get().getActivationCode())){
             auth.get().setStatus(EStatus.ACTIVE);
             update(auth.get());
-            userManager.activateStatus(dto.getId());
+            userManager.activateStatus(token,dto.getId());
             return  true;
         }else{
             throw new AuthManagerException(ErrorType.ACTIVATE_CODE_ERROR);
@@ -143,5 +140,21 @@ public class AuthService extends ServiceManager<Auth,Long> {
 
         // authRepository.findAllByRole(myrole).stream().map(x->IAuthMapper.INSTANCE.toRoleResponseDto(x)).collect(Collectors.toList());
         return  IAuthMapper.INSTANCE.toRoleResponseDtos(authRepository.findAllByRole(myrole));
+    }
+
+    public Boolean updateRole(RoleUpdateRequestDto dto) {
+        ERole role=null;
+        Optional<Auth> auth=findById(dto.getId());
+        if (auth.isEmpty()){
+            throw new AuthManagerException(ErrorType.USER_NOT_FOUND);
+        }
+        try {
+           role=ERole.valueOf(dto.getRole());
+        }catch (Exception e){
+            throw  new AuthManagerException(ErrorType.ROLE_NOT_FOUND);
+        }
+        auth.get().setRole(role);
+        update(auth.get());
+         return  true;
     }
 }

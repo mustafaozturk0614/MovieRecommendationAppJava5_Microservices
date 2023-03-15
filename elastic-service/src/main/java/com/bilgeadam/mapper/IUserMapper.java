@@ -4,7 +4,6 @@ import com.bilgeadam.dto.request.UserProfileCreateRequestDto;
 import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.repository.entity.UserProfile;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
@@ -19,7 +18,7 @@ public interface IUserMapper {
     List<UserProfile> toUserProfiles(final List<UserFindAllResponseDto> dto);
     UserProfile toUserProfile(final UserFindAllResponseDto dto);
 
-    @Mapping(source = "id",target = "userId")
+
     UserProfile toUserProfile(final UserProfileCreateRequestDto dto);
 
 }

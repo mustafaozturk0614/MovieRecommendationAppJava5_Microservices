@@ -1,17 +1,19 @@
 package com.bilgeadam.dto.request;
 
+import com.bilgeadam.repository.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class UserProfileCreateRequestDto {
+@SuperBuilder
+public class UserProfileCreateRequestDto extends BaseEntity {
 
-    private Long id;
+    private Long userId;
     private Long authId;
     private String username;
     private String email;

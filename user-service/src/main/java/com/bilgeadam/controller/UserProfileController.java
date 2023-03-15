@@ -39,7 +39,7 @@ public class UserProfileController {
     }
 
     @PostMapping(ACTIVATESTATUS+"/{authId}")
-    public ResponseEntity<Boolean> activateStatus(@PathVariable  Long authId){
+    public ResponseEntity<Boolean> activateStatus(@RequestHeader(value = "Authorization")String token ,@PathVariable  Long authId){
       return   ResponseEntity.ok(userProfileService.activateStatus(authId));
       //  ....... activatestatsus/1
     }

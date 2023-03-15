@@ -1,7 +1,6 @@
 package com.bilgeadam.manager;
 
 import com.bilgeadam.dto.response.UserFindAllResponseDto;
-import com.bilgeadam.repository.entity.UserProfile;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

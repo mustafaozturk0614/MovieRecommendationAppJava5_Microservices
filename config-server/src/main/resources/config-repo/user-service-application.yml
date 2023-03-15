@@ -22,3 +22,8 @@ spring:
     show-sql: true
 rabbitmq:
   queueRegister: register-queue
+
+jwt:
+  secretKey: ${secretkey}
+  issuer: ${issuer}
+  audience: ${audience}

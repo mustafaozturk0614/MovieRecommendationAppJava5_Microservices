@@ -3,10 +3,7 @@ package com.bilgeadam.manager;
 import com.bilgeadam.dto.request.NewCreateUserRequestDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import static com.bilgeadam.constant.ApiUrls.ACTIVATESTATUS;
 
@@ -19,7 +16,7 @@ public interface IUserManager {
     public ResponseEntity<Boolean> createUser(@RequestBody NewCreateUserRequestDto dto);
 
     @PostMapping(ACTIVATESTATUS+"/{authId}")
-    public ResponseEntity<Boolean> activateStatus(@PathVariable Long authId);
+    public ResponseEntity<Boolean> activateStatus(@RequestHeader(value = "Authorization")String token,@PathVariable Long authId);
     @PostMapping(ACTIVATESTATUS)
     public ResponseEntity<Boolean> activateStatus2(@RequestParam Long authId);
 }
