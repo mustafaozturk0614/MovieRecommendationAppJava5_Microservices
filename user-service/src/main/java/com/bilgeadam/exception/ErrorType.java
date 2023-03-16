@@ -12,7 +12,7 @@ public enum ErrorType {
     USER_NOT_CREATED(4211,"Kullanici olusturulamadi",HttpStatus.BAD_REQUEST),
     USERNAME_DUPLICATE(4212,"Böyle bir kullanıcı adı var",HttpStatus.BAD_REQUEST),
 
-
+    INVALID_TOKEN(4213,"Geçersiz Token",HttpStatus.BAD_REQUEST),
 
     ;
 

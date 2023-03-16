@@ -1,0 +1,15 @@
+server:
+  port: 8093
+spring:
+  zipkin:
+    enabled: true
+    base-url: http://localhost:9411
+    service:
+      name: movie-service
+  data:
+    mongodb:
+      host: localhost    #104.197.195.2
+      port: 29000
+      username: "java5user"
+      password: "root"
+      database: moviedb

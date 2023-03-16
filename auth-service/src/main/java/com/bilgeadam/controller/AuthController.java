@@ -55,8 +55,7 @@ public class AuthController {
     }
 
     @PutMapping(UPDATEBYUSERNAMEOREMAIL)
-    public ResponseEntity<Boolean> updateByUsernameOrEmail(@RequestBody UpdateByEmailOrUserNameRequestDto dto){
-
+    public ResponseEntity<Boolean> updateByUsernameOrEmail(@RequestHeader(value = "Authorization")String token,  @RequestBody UpdateByEmailOrUserNameRequestDto dto){
         return ResponseEntity.ok(authService.updateByUsernaemOrEmail(dto));
 
     }

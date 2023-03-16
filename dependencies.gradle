@@ -35,6 +35,8 @@ ext{
           springBootDataRedis         : "org.springframework.boot:spring-boot-starter-data-redis:$versions.springBoot",
           springDataElasticSearch: "org.springframework.boot:spring-boot-starter-data-elasticsearch:$versions.springBoot",
           springBootStarterSecurity              : "org.springframework.boot:spring-boot-starter-security:$versions.springBoot",
+          springBootDataMongodb : "org.springframework.boot:spring-boot-starter-data-mongodb:$versions.springBoot",
+          gson :'com.google.code.gson:gson:2.7'
     ]
 
 }

@@ -1,8 +1,8 @@
 package com.bilgeadam.service;
 
 import com.bilgeadam.dto.request.NewCreateUserRequestDto;
+import com.bilgeadam.dto.request.UpdateByEmailOrUserNameRequestDto;
 import com.bilgeadam.dto.request.UpdateRequestDto;
-import com.bilgeadam.dto.request.UserProfileCreateRequestDto;
 import com.bilgeadam.dto.response.RoleResponseDto;
 import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.exception.ErrorType;
@@ -13,14 +13,18 @@ import com.bilgeadam.mapper.IUserMapper;
 import com.bilgeadam.repository.IUserProfileRepositroy;
 import com.bilgeadam.repository.entity.UserProfile;
 import com.bilgeadam.repository.enums.EStatus;
+import com.bilgeadam.utility.JwtTokenManager;
 import com.bilgeadam.utility.ServiceManager;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,12 +38,15 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
     private final ElasticManager elasticManager;
     private final CacheManager cacheManager;
 
-    public UserProfileService(IUserProfileRepositroy userProfileRepositroy, AuthManager authManager, ElasticManager elasticManager, CacheManager cacheManager) {
+    private final JwtTokenManager jwtTokenManager;
+
+    public UserProfileService(IUserProfileRepositroy userProfileRepositroy, AuthManager authManager, ElasticManager elasticManager, CacheManager cacheManager, JwtTokenManager jwtTokenManager) {
         super(userProfileRepositroy);
         this.userProfileRepositroy = userProfileRepositroy;
         this.authManager = authManager;
         this.elasticManager = elasticManager;
         this.cacheManager = cacheManager;
+        this.jwtTokenManager = jwtTokenManager;
     }
     @Transactional
     public Boolean createUser(NewCreateUserRequestDto dto) {
@@ -58,7 +65,12 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
     }
 
     public Boolean update(UpdateRequestDto dto) {
-        Optional<UserProfile> userProfile=userProfileRepositroy.findOptionalByAuthId(dto.getAuthId());
+        Optional<Long> authId=jwtTokenManager.getIdFromToken(dto.getToken());
+        if (authId.isEmpty()){
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+
+        Optional<UserProfile> userProfile=userProfileRepositroy.findOptionalByAuthId(authId.get());
         if (userProfile.isEmpty()){
             throw new UserManagerException(ErrorType.USER_NOT_FOUND);
         }
@@ -66,7 +78,11 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
         if (!dto.getEmail().equals(userProfile.get().getEmail())||!dto.getUsername().equals(userProfile.get().getUsername())){
             userProfile.get().setUsername(dto.getUsername());
            userProfile.get().setEmail(dto.getEmail());
-            authManager.updateByUsernameOrEmail(IUserMapper.INSTANCE.toUpdateByEmailOrUserNameRequestDto(dto));
+            authManager.updateByUsernameOrEmail("Bearer "+dto.getToken(), UpdateByEmailOrUserNameRequestDto.builder()
+                            .email(userProfile.get().getEmail())
+                            .username(userProfile.get().getUsername())
+                            .id(authId.get())
+                    .build());
         }
         userProfile.get().setAbout(dto.getAbout());
         userProfile.get().setAddress(dto.getAddress());
@@ -118,5 +134,11 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
     public List<UserFindAllResponseDto> findAllUser() {
        return findAll().stream().map(x->IUserMapper.INSTANCE.toUserFindAllResponseDto(x)).collect(Collectors.toList());
 
+    }
+
+    public Page<UserProfile> findAllPagebale(int pageSize, int pageNumber, String direction, String sortParameter) {
+        Sort sort=Sort.by(Sort.Direction.fromString(direction),sortParameter);
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        return userProfileRepositroy.findAll(pageable);
     }
 }

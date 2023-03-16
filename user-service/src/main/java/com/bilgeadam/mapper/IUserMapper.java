@@ -21,7 +21,7 @@ public interface IUserMapper {
 
 
     UserProfile toUserProfile(final NewCreateUserRequestDto dto);
-    @Mapping(source = "authId" ,target = "id")
+
     UpdateByEmailOrUserNameRequestDto toUpdateByEmailOrUserNameRequestDto(final UpdateRequestDto dto);
     UserProfile toUserProfile(final UpdateRequestDto dto);
 

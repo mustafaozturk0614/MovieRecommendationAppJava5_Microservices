@@ -61,6 +61,7 @@ public class JwtTokenManager {
         }
     }
 
+
     public Optional<DecodedJWT> validateToken(String token){
         try {
             Algorithm algorithm=Algorithm.HMAC512(secretKey);

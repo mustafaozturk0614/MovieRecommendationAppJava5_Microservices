@@ -14,6 +14,7 @@
         <module name="MovieRecommendationAppJava5.mail-service.main" />
         <module name="MovieRecommendationAppJava5.api-gateway-service.main" />
         <module name="MovieRecommendationAppJava5.user-service.main" />
+        <module name="MovieRecommendationAppJava5.movie-service.main" />
         <module name="MovieRecommendationAppJava5.config-server-git.main" />
         <module name="MovieRecommendationAppJava5.elastic-service.main" />
       </profile>

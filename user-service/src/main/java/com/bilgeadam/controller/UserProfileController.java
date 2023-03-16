@@ -8,6 +8,7 @@ import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.repository.entity.UserProfile;
 import com.bilgeadam.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,4 +66,13 @@ public class UserProfileController {
     public ResponseEntity<List<UserProfile>> findByRole(@PathVariable  String role){
         return ResponseEntity.ok(userProfileService.findByRole(role));
     }
+
+    @GetMapping("/findallbypageable")
+    public ResponseEntity<Page<UserProfile>> findAllPagebale(int pageSize,int pageNumber,@RequestParam(defaultValue = "ASC",required = false) String direction,@RequestParam(defaultValue = "id",required = false) String sortParameter){
+
+        return ResponseEntity.ok(userProfileService.findAllPagebale(pageSize,pageNumber,direction,sortParameter));
+
+    }
+
+
 }

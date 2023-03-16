@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Builder
 public class UpdateRequestDto {
-    private Long authId;
+    private String token;
     @NotBlank
     @Size(min=3,max=20)
     private String username;
