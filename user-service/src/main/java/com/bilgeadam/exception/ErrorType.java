@@ -13,8 +13,8 @@ public enum ErrorType {
     USERNAME_DUPLICATE(4212,"Böyle bir kullanıcı adı var",HttpStatus.BAD_REQUEST),
 
     INVALID_TOKEN(4213,"Geçersiz Token",HttpStatus.BAD_REQUEST),
-
-    ;
+    MOVIE_ALREADY_EXIST(4214,"Film Daha önce favorilere eklenmis",HttpStatus.BAD_REQUEST),
+    GENRE_ALREADY_EXIST(4215,"Film Türü daha önce favorilere eklenmis",HttpStatus.BAD_REQUEST);
 
   private   int code;
   private   String message;

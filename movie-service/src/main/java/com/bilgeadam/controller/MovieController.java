@@ -1,6 +1,8 @@
 package com.bilgeadam.controller;
 
+import com.bilgeadam.dto.request.GenreIdsRequestDto;
 import com.bilgeadam.dto.request.MovieRateRequestDto;
+import com.bilgeadam.dto.response.MovieResponseDto;
 import com.bilgeadam.repository.entity.Movie;
 import com.bilgeadam.service.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,18 @@ public class MovieController {
     public ResponseEntity<Boolean> rateMovie(@RequestBody MovieRateRequestDto dto){
 
         return  ResponseEntity.ok(movieService.rateMovie(dto));
+    }
+
+    @PostMapping("/getmovieid/{name}") //localhost:8093/.....movie/getmovieid/Glee
+    public ResponseEntity<String> getMovieId(@PathVariable String name){
+
+        return  ResponseEntity.ok(movieService.getByMovieId(name));
+    }
+
+    @PostMapping("/getrecommendation")
+    public ResponseEntity<List<MovieResponseDto>> getRecommendation(@RequestBody GenreIdsRequestDto dto){
+
+        return  ResponseEntity.ok(movieService.getRecommendation(dto));
     }
 
 }

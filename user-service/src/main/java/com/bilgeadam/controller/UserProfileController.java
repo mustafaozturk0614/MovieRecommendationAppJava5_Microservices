@@ -2,9 +2,8 @@ package com.bilgeadam.controller;
 
 import static com.bilgeadam.constant.ApiUrls.*;
 
-import com.bilgeadam.dto.request.NewCreateUserRequestDto;
-import com.bilgeadam.dto.request.RateRequestDto;
-import com.bilgeadam.dto.request.UpdateRequestDto;
+import com.bilgeadam.dto.request.*;
+import com.bilgeadam.dto.response.MovieResponseDto;
 import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.repository.entity.UserProfile;
 import com.bilgeadam.service.UserProfileService;
@@ -81,4 +80,24 @@ public class UserProfileController {
         return ResponseEntity.ok(userProfileService.rateMovie(dto));
     }
 
+    @PostMapping("/favmovie")
+    public  ResponseEntity<Boolean> addFavMovies(@RequestBody FavMovieRequestDto dto){
+
+        return  ResponseEntity.ok(userProfileService.addFavMovies(dto));
+    }
+
+    @PostMapping("/favmoviebyname")
+    public  ResponseEntity<Boolean> addFavMovies(@RequestBody FavMovieByNameRequestDto dto){
+
+        return  ResponseEntity.ok(userProfileService.addFavMoviesByName(dto));
+    }
+
+    @PostMapping("/favgenre")
+    public  ResponseEntity<Boolean> addFavGenres(@RequestBody FavGenresRequestDto dto){
+        return  ResponseEntity.ok(userProfileService.addFavGenres(dto));
+    }
+    @PostMapping("/getrecommendation")
+    public  ResponseEntity<List<MovieResponseDto>> getRecommendation(@RequestHeader(value = "Authorization") String token){
+        return  ResponseEntity.ok(userProfileService.getRecommendation(token));
+    }
 }

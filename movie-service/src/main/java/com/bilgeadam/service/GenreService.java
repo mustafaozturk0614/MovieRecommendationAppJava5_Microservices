@@ -40,4 +40,9 @@ public class GenreService extends ServiceManager<Genre,String> {
 
         return  genresList;
     }
+
+
+   public List<Genre> getGenresByIds(List<String> genreIds){
+        return genreRepository.findAllByIdIn(genreIds);
+   }
 }

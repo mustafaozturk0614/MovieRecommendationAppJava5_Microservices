@@ -1,6 +1,7 @@
 package com.bilgeadam.service;
 
 import com.bilgeadam.dto.request.*;
+import com.bilgeadam.dto.response.MovieResponseDto;
 import com.bilgeadam.dto.response.RoleResponseDto;
 import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.exception.ErrorType;
@@ -164,5 +165,82 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
                 .build());
 
         return true;
+    }
+
+    public Boolean addFavMovies(FavMovieRequestDto dto) {
+        Optional<Long> authId=jwtTokenManager.getIdFromToken(dto.getToken());
+        if (authId.isEmpty()){
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        Optional<UserProfile> userProfile=userProfileRepositroy.findOptionalByAuthId(authId.get());
+        if (userProfile.isEmpty()){
+            throw  new UserManagerException(ErrorType.USER_NOT_FOUND);
+        }
+        if (!userProfile.get().getFavMovies().contains(dto.getMovieId())){
+            userProfile.get().getFavMovies().add(dto.getMovieId());
+            update(userProfile.get());
+            return true;
+        }else{
+            throw  new UserManagerException(ErrorType.MOVIE_ALREADY_EXIST);
+        }
+
+    }
+
+    public Boolean addFavMoviesByName(FavMovieByNameRequestDto dto) {
+
+        Optional<Long> authId=jwtTokenManager.getIdFromToken(dto.getToken());
+        if (authId.isEmpty()){
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        Optional<UserProfile> userProfile=userProfileRepositroy.findOptionalByAuthId(authId.get());
+        if (userProfile.isEmpty()){
+            throw  new UserManagerException(ErrorType.USER_NOT_FOUND);
+        }
+        String id=movieManager.getMovieId(dto.getName()).getBody();
+        System.out.println("===>"+id);
+        if (!userProfile.get().getFavMovies().contains(id)){
+            userProfile.get().getFavMovies().add(id);
+            update(userProfile.get());
+            return true;
+        }else{
+            throw  new UserManagerException(ErrorType.MOVIE_ALREADY_EXIST);
+        }
+    }
+
+    public Boolean addFavGenres(FavGenresRequestDto dto) {
+        Optional<Long> authId=jwtTokenManager.getIdFromToken(dto.getToken());
+        if (authId.isEmpty()){
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        Optional<UserProfile> userProfile=userProfileRepositroy.findOptionalByAuthId(authId.get());
+        if (userProfile.isEmpty()){
+            throw  new UserManagerException(ErrorType.USER_NOT_FOUND);
+        }
+        if (!userProfile.get().getFavGenres().contains(dto.getGenreId())){
+            userProfile.get().getFavGenres().add(dto.getGenreId());
+            update(userProfile.get());
+            return true;
+        }else{
+            throw  new UserManagerException(ErrorType.GENRE_ALREADY_EXIST);
+        }
+
+    }
+
+    public List<MovieResponseDto> getRecommendation(String token) {
+        Optional<Long> authId=jwtTokenManager.getIdFromToken(token.substring(7));
+        if (authId.isEmpty()){
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        Optional<UserProfile> userProfile=userProfileRepositroy.findOptionalByAuthId(authId.get());
+        if (userProfile.isEmpty()){
+            throw  new UserManagerException(ErrorType.USER_NOT_FOUND);
+        }
+
+        // moviecontrollera gidecek olan istek buraya yazılacak
+
+        return movieManager.getRecommendation(GenreIdsRequestDto.builder().genreIds(userProfile.get().getFavGenres())
+                        .userId(userProfile.get().getId())
+                .build()).getBody();
+
     }
 }
