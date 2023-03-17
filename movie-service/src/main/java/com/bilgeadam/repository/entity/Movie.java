@@ -11,7 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Data
@@ -32,4 +34,6 @@ public class Movie extends BaseEntity {
     private LocalDate premiered;
     private String url;
     private List<MovieComment> comments;
+    private Map<Long,Double> userRatings=new HashMap<>();
+
 }

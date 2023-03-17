@@ -1,14 +1,13 @@
 package com.bilgeadam.service;
 
-import com.bilgeadam.dto.request.NewCreateUserRequestDto;
-import com.bilgeadam.dto.request.UpdateByEmailOrUserNameRequestDto;
-import com.bilgeadam.dto.request.UpdateRequestDto;
+import com.bilgeadam.dto.request.*;
 import com.bilgeadam.dto.response.RoleResponseDto;
 import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.exception.ErrorType;
 import com.bilgeadam.exception.UserManagerException;
 import com.bilgeadam.manager.AuthManager;
 import com.bilgeadam.manager.ElasticManager;
+import com.bilgeadam.manager.MovieManager;
 import com.bilgeadam.mapper.IUserMapper;
 import com.bilgeadam.repository.IUserProfileRepositroy;
 import com.bilgeadam.repository.entity.UserProfile;
@@ -39,14 +38,16 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
     private final CacheManager cacheManager;
 
     private final JwtTokenManager jwtTokenManager;
+    private final MovieManager movieManager;
 
-    public UserProfileService(IUserProfileRepositroy userProfileRepositroy, AuthManager authManager, ElasticManager elasticManager, CacheManager cacheManager, JwtTokenManager jwtTokenManager) {
+    public UserProfileService(IUserProfileRepositroy userProfileRepositroy, AuthManager authManager, ElasticManager elasticManager, CacheManager cacheManager, JwtTokenManager jwtTokenManager, MovieManager movieManager) {
         super(userProfileRepositroy);
         this.userProfileRepositroy = userProfileRepositroy;
         this.authManager = authManager;
         this.elasticManager = elasticManager;
         this.cacheManager = cacheManager;
         this.jwtTokenManager = jwtTokenManager;
+        this.movieManager = movieManager;
     }
     @Transactional
     public Boolean createUser(NewCreateUserRequestDto dto) {
@@ -140,5 +141,28 @@ public class UserProfileService extends ServiceManager<UserProfile,Long> {
         Sort sort=Sort.by(Sort.Direction.fromString(direction),sortParameter);
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
         return userProfileRepositroy.findAll(pageable);
+    }
+
+    @Transactional
+    public Boolean rateMovie(RateRequestDto dto) {
+        Optional<Long> authId=jwtTokenManager.getIdFromToken(dto.getToken());
+        if (authId.isEmpty()){
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        Optional<UserProfile> userProfile=userProfileRepositroy.findOptionalByAuthId(authId.get());
+        if (userProfile.isEmpty()){
+            throw  new UserManagerException(ErrorType.USER_NOT_FOUND);
+        }
+        userProfile.get().getMyRatings().put(dto.getMovieId(), dto.getRating());
+        update(userProfile.get());
+
+        movieManager.rateMovie(
+                MovieRateRequestDto.builder()
+                        .userId(userProfile.get().getId())
+                        .rating(dto.getRating())
+                        .movieId(dto.getMovieId())
+                .build());
+
+        return true;
     }
 }

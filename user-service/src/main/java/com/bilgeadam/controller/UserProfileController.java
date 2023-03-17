@@ -3,6 +3,7 @@ package com.bilgeadam.controller;
 import static com.bilgeadam.constant.ApiUrls.*;
 
 import com.bilgeadam.dto.request.NewCreateUserRequestDto;
+import com.bilgeadam.dto.request.RateRequestDto;
 import com.bilgeadam.dto.request.UpdateRequestDto;
 import com.bilgeadam.dto.response.UserFindAllResponseDto;
 import com.bilgeadam.repository.entity.UserProfile;
@@ -74,5 +75,10 @@ public class UserProfileController {
 
     }
 
+    @PostMapping("/rateMovie")
+    public ResponseEntity<Boolean> rateMovie(@RequestBody RateRequestDto dto){
+
+        return ResponseEntity.ok(userProfileService.rateMovie(dto));
+    }
 
 }

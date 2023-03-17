@@ -9,6 +9,8 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -29,5 +31,11 @@ public class UserProfile extends BaseEntity  {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private EStatus status=EStatus.PENDING;
+    @ElementCollection
+    private List<String> favMovies;
+    @ElementCollection
+    private List<String> favGenres;
+    @ElementCollection
+    private Map<String,Double> myRatings;
 
 }
